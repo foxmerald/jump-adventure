@@ -1,9 +1,12 @@
 # frozen_string_literal: true
 
 require 'gosu'
+require_relative '../helpers/coords'
 
 class Keese
   attr_accessor :x, :y, :width, :height
+
+  include Coords
 
   SLOWDOWN = 20
 
