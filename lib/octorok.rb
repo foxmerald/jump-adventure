@@ -3,7 +3,7 @@
 require 'gosu'
 
 class Octorok
-  attr_accessor :x, :y, :width, :height, :reset
+  attr_accessor :x, :y, :width, :height
 
   SLOWDOWN = 20
 
@@ -13,12 +13,9 @@ class Octorok
     @width = 100
     @height = 79
 
-    # idle.size = number of images/tiles
-    sprites = Gosu::Image.load_tiles(
+    @sprites = Gosu::Image.load_tiles(
       @window, 'assets/octorok_red.png', @width, @height, true
     )
-
-    @idle = sprites
 
     @x = @window.width
     @y = @window.bottom + 20
@@ -30,9 +27,9 @@ class Octorok
   end
 
   def draw
-    f = (@window.frame / SLOWDOWN) % 4 # @idle.size
+    f = (@window.frame / SLOWDOWN) % 4 # @sprites.size
 
-    image = @idle[f]
+    image = @sprites[f]
 
     image.draw(@x, @y, 1)
   end

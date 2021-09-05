@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'gosu'
 
 class Link
@@ -15,14 +17,10 @@ class Link
     @width = 96
     @height = 104
 
-    # idle.size = number of images/tiles
-    sprites = Gosu::Image.load_tiles(
+    @sprites = Gosu::Image.load_tiles(
       @window, 'assets/link.png', @width, @height, true
-    )
+    )[70..79]
 
-    @idle = sprites[70..79]
-
-    # center image
     @x = X
     @y = @window.bottom
 
@@ -33,36 +31,15 @@ class Link
   end
 
   def update
-    if @jumping
-      @y -= JUMP_STEP if @y > @ceiling
+    return handle_jump if @jumping
+    return handle_fall if @falling
 
-      if @y == @ceiling
-        @jumping = false
-        @falling = true
-      end
-
-      return
-    end
-
-    if @falling
-      @y += FALL_STEP if @y < @window.bottom
-
-      if @y == @window.bottom
-        @falling = false
-      end
-
-      return
-    end
-
-    if !@jumping && !@falling && @window.button_down?(Gosu::KbSpace)
-      @jumping = true
-      @y -= JUMP_STEP
-    end
+    jump if @window.button_down?(Gosu::KbSpace)
   end
 
   def draw
-    f = (@window.frame / SLOWDOWN) % @idle.size
-    image = @idle[f]
+    f = (@window.frame / SLOWDOWN) % @sprites.size
+    image = @sprites[f]
 
     image.draw(@x, @y, 1)
   end
@@ -72,5 +49,26 @@ class Link
     @y = @window.bottom
     @falling = false
     @jumping = false
+  end
+
+  private
+
+  def jump
+    @jumping = true
+    @y -= JUMP_STEP
+  end
+
+  def handle_fall
+    @y += FALL_STEP if @y < @window.bottom
+    @falling = false if @y == @window.bottom
+  end
+
+  def handle_jump
+    @y -= JUMP_STEP if @y > @ceiling
+
+    return unless @y == @ceiling
+
+    @jumping = false
+    @falling = true
   end
 end

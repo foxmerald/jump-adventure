@@ -115,5 +115,3 @@ class JumpAdventure < Gosu::Window
     @game_over = false
   end
 end
-
-JumpAdventure.new.show

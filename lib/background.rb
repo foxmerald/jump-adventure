@@ -26,5 +26,4 @@ class Background
     @background.draw(next_x, @y, 0)
     @background.draw(next_x + @background.width, @y, 0) if next_x < (@background.width - @window.width)
   end
-
 end

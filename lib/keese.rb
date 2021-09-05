@@ -3,7 +3,7 @@
 require 'gosu'
 
 class Keese
-  attr_accessor :x, :y, :width, :height, :reset
+  attr_accessor :x, :y, :width, :height
 
   SLOWDOWN = 20
 
@@ -13,18 +13,12 @@ class Keese
     @width = 76
     @height = 72
 
-    # idle.size = number of images/tiles
-    sprites = Gosu::Image.load_tiles(
+    @sprites = Gosu::Image.load_tiles(
       @window, 'assets/keese.png', @width, @height, true
     )
 
-    @idle = sprites
-
     @x = @window.width
     @y = @window.bottom - 150
-
-    # direction and movement
-    @frame = 0
   end
 
   def update
@@ -34,13 +28,11 @@ class Keese
   end
 
   def draw
-    f = (@window.frame / SLOWDOWN) % 4 # @idle.size
+    f = (@window.frame / SLOWDOWN) % 4 # @sprites.size
 
-    image = @idle[f]
+    image = @sprites[f]
 
     image.draw(@x, @y, 1)
-
-    # Gosu.draw_rect(@x, @y, @width, @height, Gosu::Color.argb(0xff_00ff00), 99)
   end
 
   def reset
