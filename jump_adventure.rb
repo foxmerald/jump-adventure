@@ -5,9 +5,11 @@ require 'gosu'
 Dir["#{File.dirname(__FILE__)}/lib/*.rb"].sort.each { |file| require file }
 
 class JumpAdventure < Gosu::Window
-  attr_accessor :speed, :frame, :bottom, :game_over
+  BASE_SPEED = 4
 
-  def initialize(width = 800, height = 600, fullscreen = false)
+  attr_accessor :speed, :frame, :bottom, :game_over, :short_press
+
+  def initialize(width = 1200, height = 600, fullscreen = false)
     super
 
     self.caption = "Link's Jump Adventure"
@@ -53,6 +55,8 @@ class JumpAdventure < Gosu::Window
     @score = Gosu::Image.from_text(
       self, "Score: #{(@background.x / 50).abs}", Gosu.default_font_name, 30
     )
+
+    increase_speed
 
     @game_over = true if collision?
   end
@@ -113,5 +117,11 @@ class JumpAdventure < Gosu::Window
     @keese.reset
 
     @game_over = false
+  end
+
+  def increase_speed
+    increased_speed = @frame/750 + BASE_SPEED
+
+    @speed = increased_speed
   end
 end
