@@ -80,9 +80,10 @@ class Link
   end
 
   def handle_jump
-    @y -= JUMP_STEP if @y > @ceiling
+    top = @window.short_press ? @ceiling + 150 : @ceiling
+    @y -= JUMP_STEP if @y > top
 
-    return unless @y == @ceiling
+    return unless @y == top
 
     @jumping = false
     @falling = true

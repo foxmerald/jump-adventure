@@ -6,6 +6,7 @@ Dir["#{File.dirname(__FILE__)}/lib/*.rb"].sort.each { |file| require file }
 
 class JumpAdventure < Gosu::Window
   BASE_SPEED = 4
+  SHORT_PRESS_FRAME = 15
 
   attr_accessor :speed, :frame, :bottom, :game_over, :short_press
 
@@ -30,14 +31,22 @@ class JumpAdventure < Gosu::Window
     @octorok = Octorok.new(self)
     @keese = Keese.new(self)
     @background = Background.new(self)
+
+    @short_press = false
+    @space_down_frame = 0
   end
 
   def button_down(id)
     close if id == Gosu::KbEscape
+
+    @space_down_frame = @frame if id == Gosu::KbSpace
+    @short_press = false
   end
 
   def button_up(id)
-    return unless @game_over
+    if id == Gosu::KbSpace && @frame - @space_down_frame <= SHORT_PRESS_FRAME
+      @short_press = true
+    end
 
     restart_game if id == Gosu::KbSpace
   end
