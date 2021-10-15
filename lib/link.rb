@@ -24,6 +24,10 @@ class Link
       @window, 'assets/link.png', @width, @height, true
     )[70..79]
 
+    @game_over_sprite = Gosu::Image.load_tiles(
+      @window, 'assets/link.png', @width, @height, true
+    )[2]
+
     @x = X
     @y = @window.bottom
 
@@ -41,8 +45,17 @@ class Link
   end
 
   def draw
+
+    return @game_over_sprite.draw(@x, @y, 1) if @window.game_over
+
+    image = if @jumping
+      @sprites[7]
+    elsif @falling
+      @sprites[5]
+    else
     f = (@window.frame / SLOWDOWN) % @sprites.size
-    image = @sprites[f]
+      @sprites[f]
+    end
 
     image.draw(@x, @y, 1)
   end
