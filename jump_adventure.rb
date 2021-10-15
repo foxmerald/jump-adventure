@@ -7,6 +7,7 @@ Dir["#{File.dirname(__FILE__)}/lib/*.rb"].sort.each { |file| require file }
 class JumpAdventure < Gosu::Window
   BASE_SPEED = 4
   SHORT_PRESS_FRAME = 15
+  COLLISION_BUFFER = 15
 
   attr_accessor :speed, :frame, :bottom, :game_over, :short_press
 
@@ -87,26 +88,24 @@ class JumpAdventure < Gosu::Window
     link_front = @link.x + @link.width
     link_foot = @link.y + @link.height
     link_head = @link.y
+    link_back = @link.x
 
-    octorok_front = @octorok.x
-    octorok_head = @octorok.y
+    octorok_front = @octorok.x + COLLISION_BUFFER
+    octorok_head = @octorok.y + COLLISION_BUFFER
+    octorok_back = @octorok.x + @octorok.width - COLLISION_BUFFER
 
-    keese_front = @keese.x
-    keese_head = @keese.y
-    keese_foot = @keese.y + @keese.height
+    keese_front = @keese.x + COLLISION_BUFFER
+    keese_head = @keese.y + COLLISION_BUFFER
+    keese_foot = @keese.y + @keese.height - COLLISION_BUFFER - 20
 
     octorok_collision = link_front >= octorok_front && link_foot >= octorok_head
 
     keese_colission = link_front >= keese_front && link_foot >= keese_head && link_head <= keese_foot
 
-    if octorok_collision || keese_colission
-      puts 'COLLISION'
+    octorok_collision = link_back <= octorok_back && link_front >= octorok_front && link_foot >= octorok_head
+    keese_collision = link_front >= keese_front && link_foot >= keese_head && link_head <= keese_foot
 
-      @game_over = true
-    else
-      puts '-----'
-      false
-    end
+    octorok_collision || keese_collision
   end
 
   def show_game_over
